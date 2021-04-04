@@ -20,7 +20,5 @@ doc/api/
 *.js.deps
 *.js.map
 .idea
-android
-ios
 .metadata
 .DS_Store
