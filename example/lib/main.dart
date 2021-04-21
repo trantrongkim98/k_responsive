@@ -1,33 +1,37 @@
 // import 'package:device_preview/device_preview.dart';
+// import 'package:device_preview/device_preview.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:k_responsive/k_responsive.dart';
+import 'package:k_responsive_example/widgets/card.dart';
+import 'package:k_responsive_example/widgets/cvv.dart';
+import 'package:k_responsive_example/widgets/note.dart';
+import 'package:k_responsive_example/widgets/otp.dart';
+import 'package:k_responsive_example/widgets/payment.dart';
 
 void main() {
   runApp(MyApp());
-  // runApp(
-  //   DevicePreview(
-  //     enabled: false,
-  //     builder: (ctx) {
-  //       return MyApp();
-  //     },
-  //   ),
-  // );
 }
 
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      // locale: DevicePreview.locale(context), // Add the locale here
-
       builder: (ctx, child) {
-        return Home();
-
-        /// The context don't change when update device at here
-        /// so we have move to Home widget
-        // return DevicePreview.appBuilder(ctx, Home());
+        return KResponsiveBuilder(
+          designSize: Size(375, 708),
+          responsive: KResponsiveObject(
+            tablet: 1024,
+            phoneMedium: 480,
+            watch: 200,
+            phoneSmall: 320,
+            phoneLarge: 720,
+          ),
+          child: Home(),
+        );
       },
     );
+
   }
 }
 
@@ -39,54 +43,85 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   @override
   void didChangeDependencies() {
-    KResponsive.ins.setValue(context: context);
     super.didChangeDependencies();
   }
 
   @override
   void didUpdateWidget(covariant Home oldWidget) {
-    KResponsive.ins.setValue(
-      context: context,
-      phoneLarge: 720,
-      phoneMedium: 480,
-      phoneSmall: 320,
-      tablet: 1024,
-      watch: 200,
-    );
     super.didUpdateWidget(oldWidget);
   }
 
   @override
   Widget build(BuildContext context) {
-    print(MediaQuery.of(context).size);
     return Scaffold(
-      body: Center(
+        body: SafeArea(
+      child: Container(
+        width: MediaQuery.of(context).size.width,
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Container(
-              height: KResponsive.responsive(
-                  phoneLarge: 64.0,
-                  phoneMedium: 48.0,
-                  phoneSmall: 32.0,
-                  tablet: 500.0,
-                  watch: 24.0,
-                  web: 160.0),
-              width: context.responsive(
-                web: 512,
-                watch: 24.0,
-                tablet: 500.0,
-                phoneSmall: 64.0,
-                phoneMedium: 64,
-                phoneLarge: 64.0,
-              ),
-              color: Colors.red,
+            _card(),
+            SizedBox(height: 43.hSafe),
+            CVV(),
+            SizedBox(height: 29.hSafe),
+            _line(),
+            SizedBox(height: 32.hSafe),
+            _option(),
+            SizedBox(height: 29.hSafe),
+            _buttonOTP(),
+            SizedBox(height: 34.hSafe),
+            _line(),
+            SizedBox(height: 34.heightSafe(max: 34,min:0)),
+            Note(),
+            SizedBox(height: KAuto().setSafeHeight(49)),
+            Payment(),
+            SizedBox(
+              height: KAuto().setSafeHeight(47, min: 0, max: 47),
             ),
-            responsiveWidget(),
           ],
         ),
       ),
+    ));
+  }
+
+  Widget _card() {
+    return CardCredit(
+      width:351.w,
+      height: 204.hSafe,
+    );
+  }
+
+  Widget _line() {
+    return Container(
+      height: 0.5.hSafe,
+      width: 337.w,
+      color: Color(0xFFCED2DA),
+    );
+  }
+
+  Widget _option() {
+    return Container(
+      width: 337.w,
+      height: 17.hSafe,
+      alignment: Alignment.centerLeft,
+      child: Text(
+        'Validated with the following options',
+        style: GoogleFonts.roboto(
+          fontSize: 14.fSafe,
+          color: Color(0xFF475062),
+          fontWeight: FontWeight.w400,
+          fontStyle: FontStyle.normal,
+        ),
+      ),
+    );
+  }
+
+  Widget _buttonOTP() {
+    return Container(
+      width: 337.w,
+      alignment: Alignment.centerLeft,
+      child: OTP(),
     );
   }
 
